@@ -1,0 +1,5 @@
+**/.env
+*/*.service
+
+immich/library
+immich/postgres
