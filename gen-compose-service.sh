@@ -6,12 +6,12 @@ set -euo pipefail
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") -d <compose-dir> [-f <compose-file>] [-n <service-name>] [-u <run-as-user>]
+Usage: $(basename "$0") -d <compose-dir> -u <run-as-user> [-f <compose-file>] [-n <service-name>]
 
   -d  dir containing docker-compose.yml (required)
+  -u  user to run compose as (required)
   -f  compose filename (default: docker-compose.yml)
   -n  service name (default: dir basename)
-  -u  user to run compose as (default: \$SUDO_USER or \$USER)
 
 requires sudo (writes to /etc/systemd/system/).
 EOF
@@ -20,7 +20,7 @@ EOF
 
 COMPOSE_FILE="docker-compose.yml"
 SERVICE_NAME=""
-RUN_AS_USER="${SUDO_USER:-$USER}"
+RUN_AS_USER=""
 
 while getopts "d:f:n:u:h" opt; do
   case "$opt" in
@@ -34,6 +34,7 @@ while getopts "d:f:n:u:h" opt; do
 done
 
 [[ -z "${COMPOSE_DIR:-}" ]] && usage
+[[ -z "${RUN_AS_USER:-}" ]] && usage
 [[ $EUID -eq 0 ]] || { echo "run with sudo (writes /etc/systemd/system/)" >&2; exit 1; }
 
 COMPOSE_DIR="$(cd "$COMPOSE_DIR" && pwd)"
