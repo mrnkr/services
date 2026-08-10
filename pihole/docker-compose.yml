@@ -18,10 +18,10 @@ services:
       # DNS Ports
       - "53:53/tcp"
       - "53:53/udp"
-      # Default HTTP Port
-      - "80:80/tcp"
-      # Default HTTPs Port. FTL will generate a self-signed certificate
-      - "443:443/tcp"
+      # Admin UI (host 8082 -> container 80)
+      - "8082:80/tcp"
+      # Admin UI HTTPS (host 8083 -> container 443). FTL will generate a self-signed certificate
+      - "8083:443/tcp"
       # Uncomment the line below if you are using Pi-hole as your DHCP server
       #- "67:67/udp"
       # Uncomment the line below if you are using Pi-hole as your NTP server
@@ -41,6 +41,9 @@ services:
       FTLCONF_webserver_api_password: ${WEBSERVER_API_PASSWORD}
       # If using Docker's default `bridge` network setting the dns listening mode should be set to 'ALL'
       FTLCONF_dns_listeningMode: 'ALL'
+      FTLCONF_dns_upstreams: |-
+              1.1.1.1
+              1.0.0.1
     # Volumes store your data between container upgrades
     volumes:
       # For persisting Pi-hole's databases and common configuration file
