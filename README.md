@@ -47,6 +47,32 @@ docker compose up -d
 
 App at `http://<tailscale-hostname>:2283`.
 
+### pihole
+
+Network-wide ad blocker + DNS (https://pi-hole.net), reachable over Tailscale.
+
+Containers:
+- `tailscale` — Tailscale sidecar, exposes ports `53` (DNS tcp/udp), `80`, `443`; `pihole` shares its network via `network_mode: service:tailscale`
+- `pihole` — Pi-hole DNS/web app
+
+Required `.env` vars (`pihole/.env`, gitignored):
+
+| Var | Purpose |
+|---|---|
+| `TS_AUTHKEY` | Tailscale auth key for sidecar |
+| `TZ` | timezone for Pi-hole |
+| `WEBSERVER_API_PASSWORD` | web UI password |
+
+Setup:
+
+```bash
+cd pihole
+cp .env.example .env   # fill in values above
+docker compose up -d
+```
+
+Web UI at `http://<tailscale-hostname>/admin`.
+
 ## Adding a new service
 
 1. `mkdir <name> && cd <name>`
