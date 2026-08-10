@@ -12,7 +12,7 @@ name: immich
 services:
   tailscale:
     image: tailscale/tailscale:latest
-    container_name: tailscale
+    container_name: tailscale-immich
     hostname: tailscale-immich
     environment:
       - TS_AUTHKEY=${TS_AUTHKEY}
