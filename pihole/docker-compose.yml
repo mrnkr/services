@@ -1,19 +1,8 @@
 # More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
 services:
-  tailscale:
-    image: tailscale/tailscale:latest
-    container_name: tailscale-pihole
-    hostname: tailscale-pihole
-    environment:
-      - TS_AUTHKEY=${TS_AUTHKEY}
-      - TS_STATE_DIR=/var/lib/tailscale
-    volumes:
-      - ./tailscale-state:/var/lib/tailscale
-    env_file:
-      - .env
-    cap_add:
-      - net_admin
-      - net_raw
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
     ports:
       # DNS Ports
       - "53:53/tcp"
@@ -26,12 +15,6 @@ services:
       #- "67:67/udp"
       # Uncomment the line below if you are using Pi-hole as your NTP server
       #- "123:123/udp"
-    restart: unless-stopped
-
-  pihole:
-    container_name: pihole
-    image: pihole/pihole:latest
-    network_mode: "service:tailscale"
     env_file:
       - .env
     environment:

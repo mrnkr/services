@@ -10,31 +10,14 @@
 name: immich
 
 services:
-  tailscale:
-    image: tailscale/tailscale:latest
-    container_name: tailscale-immich
-    hostname: tailscale-immich
-    environment:
-      - TS_AUTHKEY=${TS_AUTHKEY}
-      - TS_STATE_DIR=/var/lib/tailscale
-    volumes:
-      - ./tailscale-state:/var/lib/tailscale
-    env_file:
-      - .env
-    cap_add:
-      - net_admin
-      - net_raw
-    ports:
-      - '2283:2283'
-    restart: unless-stopped
-
   immich-server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
     # extends:
     #   file: hwaccel.transcoding.yml
     #   service: cpu # set to one of [nvenc, quicksync, rkmpp, vaapi, vaapi-wsl] for accelerated transcoding
-    network_mode: "service:tailscale"
+    ports:
+      - '2283:2283'
     volumes:
       # Do not edit the next line. If you want to change the media storage location on your system, edit the value of UPLOAD_LOCATION in the .env file
       - ${UPLOAD_LOCATION}:/data
@@ -45,7 +28,6 @@ services:
     depends_on:
       - redis
       - database
-      - tailscale
     restart: always
     healthcheck:
       disable: false
