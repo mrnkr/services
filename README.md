@@ -69,6 +69,26 @@ docker compose up -d
 
 Web UI at `http://<host>:8082/admin`.
 
+### yattee
+
+Self-hosted YouTube proxy/backend for the Yattee client (https://github.com/yattee/yattee-server).
+
+Containers:
+- `yattee-server` — server, exposes port `8085`
+
+Volumes:
+- `downloads` — temporary proxied video files
+- `data` — database and encryption keys
+
+Setup:
+
+```bash
+cd yattee
+docker compose up -d
+```
+
+App at `http://<host>:8085`.
+
 ## Exposing services outside the local network (Tailscale)
 
 Tailscale runs on the host itself, not per-service. Since each service publishes its ports on the host (`0.0.0.0`) for LAN access, they're reachable the same way over the tailnet — no per-service Tailscale config needed.

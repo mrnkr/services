@@ -1,0 +1,14 @@
+services:
+  yattee-server:
+    image: yattee/yattee-server:latest
+    container_name: yattee-server
+    ports:
+      - "8085:8085"
+    volumes:
+      - downloads:/downloads
+      - data:/app/data
+    restart: unless-stopped
+
+volumes:
+  downloads:   # Temporary proxied video files
+  data:        # Database and encryption keys
