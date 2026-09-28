@@ -6,6 +6,7 @@ Docker Compose services run on this host, each managed as systemd unit via `svc.
 
 ```
 services/
+├── Makefile                 # update-<service> targets: pull + restart systemd unit
 ├── svc.sh                   # generates systemd unit for a compose dir
 ├── .gitignore               # ignores .env files, generated *.service, data dirs
 └── <service>/
@@ -101,6 +102,22 @@ sudo tailscale up
 ```
 
 Then reach any service at `http://<host-tailscale-ip-or-magicdns-name>:<port>` from any device on the tailnet, same port as on the LAN.
+
+## Updating a service
+
+```bash
+make update-immich
+make update-yattee
+make update-pihole
+```
+
+Each target: `docker compose pull` then `sudo systemctl restart <unit>.service` (unit's `ExecStart` re-runs `docker compose up -d`, picking up the new image).
+
+Default unit name = dir basename. If a unit was generated with a custom `-n <name>` (see below), override per-run:
+
+```bash
+make update-immich UNIT=custom-name
+```
 
 ## Adding a new service
 
